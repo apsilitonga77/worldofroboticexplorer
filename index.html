@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robotic Explorer - Blueprint Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* TEMA BARU: BLUEPRINT & SKEMATIK */
+        :root {
+            --bg-primary: #F4F7FC;       /* Latar utama seperti kertas blueprint */
+            --bg-secondary: #FFFFFF;     /* Putih bersih untuk kartu/konten */
+            --bg-tertiary: #E9EDF6;     /* Abu-abu muda untuk section alternatif */
+            --accent-blue: #0D6EFD;      /* Biru khas blueprint */
+            --accent-orange: #FD840D;    /* Oranye sebagai highlight teknis */
+            --text-primary: #112A46;     /* Biru dongker gelap untuk teks utama */
+            --text-secondary: #5A718A;   /* Abu-abu kebiruan untuk teks pendukung */
+            --border-color: #D1D9E6;     /* Warna border yang halus */
+        }
+
+        html {
+             scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Font judul diubah menjadi monospace, tanpa shadow */
+        h1, h2, h3, .font-monospace {
+            font-family: 'Roboto Mono', monospace;
+            color: var(--text-primary);
+        }
+
+        /* Navigasi dengan gaya blueprint yang cerah */
+        .blueprint-nav {
+            background: rgba(244, 247, 252, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero-section {
+            background-color: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Latar belakang grid yang lebih teknis dan halus */
+        .grid-background {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: pan-grid 120s linear infinite;
+        }
+
+        @keyframes pan-grid {
+            0% { background-position: 0 0; }
+            100% { background-position: 480px 480px; }
+        }
+
+        .hero-robot-img {
+            animation: float-robot 6s ease-in-out infinite;
+            border: 3px solid var(--accent-blue);
+        }
+
+        @keyframes float-robot {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Kartu dengan desain bersih, border, dan shadow halus */
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(17, 42, 70, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(17, 42, 70, 0.1);
+            border-color: var(--accent-blue);
+        }
+        
+        /* Tombol dengan gaya baru */
+        .btn-primary {
+            background: var(--accent-blue);
+            color: var(--bg-secondary);
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);
+        }
+        
+        .btn-primary:hover {
+            background: #0B5ED7; /* Biru yang lebih gelap */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-blue);
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-blue);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-blue);
+            color: var(--bg-secondary);
+        }
+
+        .scroll-animation {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-animation.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Gaya default untuk teks konten */
+        .page-prose {
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+        .page-prose h2, .page-prose h3 {
+             color: var(--text-primary);
+        }
+        .page-prose p { margin-bottom: 1rem; }
+        .page-prose strong { color: var(--text-primary); }
+        .page-prose ul { list-style-type: '✓ '; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .page-prose ul li { padding-left: 0.5rem; margin-bottom: 0.5rem; }
+
+        .whatsapp-float {
+            position: fixed;
+            width: 60px; height: 60px;
+            bottom: 40px; right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Gaya input form kontak disesuaikan dengan tema cerah */
+        #contact-form input,
+        #contact-form textarea {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color);
+        }
+        #contact-form input::placeholder,
+        #contact-form textarea::placeholder {
+            color: var(--text-secondary) !important;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="blueprint-nav sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-2 flex justify-between items-center">
+            <a href="#home" class="flex items-center space-x-3 group">
+                 <img src="https://i.imgur.com/sMLLHSl.png" alt="Logo Robotic Explorer" class="h-24 transition-transform duration-300 group-hover:scale-110">
+            </a>
+            <div class="hidden md:flex space-x-8 items-center text-sm font-semibold text-text-primary">
+                <a href="#tentang" class="nav-link inline-block hover:text-accent-blue hover:-translate-y-0.5 transition-all duration-300">Tentang Kami</a>
+                <a href="#program" class="nav-link inline-block hover:text-accent-blue hover:-translate-y-0.5 transition-all duration-300">Program</a>
+                <a href="#galeri" class="nav-link inline-block hover:text-accent-blue hover:-translate-y-0.5 transition-all duration-300">Galeri Robot</a>
+                <a href="#blog" class="nav-link inline-block hover:text-accent-blue hover:-translate-y-0.5 transition-all duration-300">Blog</a>
+                <a href="#event" class="nav-link inline-block hover:text-accent-blue hover:-translate-y-0.5 transition-all duration-300">Event</a>
+                <a href="#kontak" class="btn-secondary">Hubungi Kami</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-500 hover:text-accent-blue hover:bg-gray-100 focus:outline-none">
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden bg-white">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#tentang" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue hover:bg-gray-100 transition-colors">Tentang Kami</a>
+                <a href="#program" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue hover:bg-gray-100 transition-colors">Program</a>
+                <a href="#galeri" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue hover:bg-gray-100 transition-colors">Galeri Robot</a>
+                <a href="#blog" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue hover:bg-gray-100 transition-colors">Blog</a>
+                <a href="#event" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue hover:bg-gray-100 transition-colors">Event</a>
+                <a href="#kontak" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue hover:bg-gray-100 transition-colors">Hubungi Kami</a>
+            </div>
+        </div>
+    </header>
+
+    <div id="main-content">
+        <main>
+            <section id="home" class="hero-section min-h-screen flex items-center justify-center text-center px-4 relative">
+                <div class="grid-background"></div>
+                <div class="z-10 scroll-animation">
+                    <img src="https://i.imgur.com/N6qH9Tr.jpeg" alt="Anak-anak merakit robot" 
+                    class="mx-auto h-60 md:h-80 mb-8 object-cover rounded-full aspect-square hero-robot-img"
+                    onerror="this.onerror=null;this.src='https://placehold.co/400x400/F4F7FC/0D6EFD?text=Robotic+Class';">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-wide">MARI MERANCANG MASA DEPAN</h1>
+                    <p class="text-lg md:text-xl max-w-3xl mx-auto text-text-secondary mb-8">
+                        Mengeksplorasi potensi anak Indonesia dan membimbing mereka mencintai teknologi agar menjadi kreatif dan inovatif.
+                    </p>
+                    <a href="#program" class="btn-primary inline-block">Lihat Program Kami</a>
+                </div>
+            </section>
+
+            <section id="tentang" class="py-20 sm:py-28">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16 scroll-animation">
+                        <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Who We Are</h2>
+                        <p class="text-text-secondary mt-3 text-lg md:text-xl">Robotic Explorer – Untukmu Indonesiaku</p>
+                        <div class="w-24 h-1 bg-accent-blue mx-auto mt-4"></div>
+                    </div>
+                    <div class="flex flex-col lg:flex-row items-center gap-12 scroll-animation">
+                        <div class="lg:w-1/2">
+                            <img src="https://images.unsplash.com/photo-1589254065909-b7086229d08c?q=80&w=1974&auto=format&fit=crop" alt="Anak-anak belajar robotik" class="rounded-lg shadow-lg w-full h-full object-cover border border-border-color" onerror="this.onerror=null;this.src='https://placehold.co//F4F7FC/0D6EFD?text=Robotic+Fun';">
+                        </div>
+                        <div class="lg:w-1/2 text-lg text-text-secondary space-y-4">
+                            <p>Robotic Explorer (RE) didirikan pada Juli 2005 di Muara Karang, Jakarta Utara, oleh Ibu Jully Tjindrawan. Awalnya, RE bekerja sama dengan 15 sekolah nasional dan internasional di Jakarta untuk mengajarkan robotika melalui program ekstrakurikuler.</p>
+                            <p>Pada 2006, kami meningkatkan kualitas pembelajaran dengan melibatkan pakar seperti Ir. Paulus Wijayacitra (Pendiri Institut Hertz Electronic dan ahli mikrokontroler) & Dr. Ir. Wahidin Wahab MSc. (Pakar robotika, Presiden KRI sejak 2004, dan anggota Badan Riset Nasional).</p>
+                            <p>RE berkomitmen meningkatkan kualitas SDM Indonesia melalui pendidikan robotika tingkat lanjut. Kini, RE hadir di lebih dari 100 sekolah, tidak hanya sebagai program ekstrakurikuler tetapi juga bagian dari pelajaran intra sekolah.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="program" class="py-20 sm:py-28 bg-bg-tertiary">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16 scroll-animation">
+                        <h2 class="text-3xl md:text-4xl font-bold">Our Programs</h2>
+                        <p class="text-text-secondary mt-2">Program Unggulan untuk Mengasah Kemampuan Teknologi</p>
+                        <div class="w-24 h-1 bg-accent-blue mx-auto mt-4"></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="card p-6 rounded-lg text-center scroll-animation"><h3 class="text-xl font-bold mb-2">Kursus</h3><p class="text-text-secondary">Program belajar terstruktur untuk menguasai dasar-dasar robotika.</p></div>
+                        <div class="card p-6 rounded-lg text-center scroll-animation" style="transition-delay: 50ms;"><h3 class="text-xl font-bold mb-2">Private / Semi Private</h3><p class="text-text-secondary">Pembelajaran intensif dengan bimbingan personal yang lebih fokus.</p></div>
+                        <div class="card p-6 rounded-lg text-center scroll-animation" style="transition-delay: 100ms;"><h3 class="text-xl font-bold mb-2">Ekstrakulikuler</h3><p class="text-text-secondary">Kegiatan di luar jam sekolah untuk menyalurkan minat pada teknologi robot.</p></div>
+                        <div class="card p-6 rounded-lg text-center scroll-animation" style="transition-delay: 150ms;"><h3 class="text-xl font-bold mb-2">Intrakulikuler</h3><p class="text-text-secondary">Integrasi kurikulum robotika ke dalam mata pelajaran sekolah.</p></div>
+                        <div class="card p-6 rounded-lg text-center scroll-animation" style="transition-delay: 200ms;"><h3 class="text-xl font-bold mb-2">Seminars</h3><p class="text-text-secondary">Berbagi wawasan dan pengetahuan terbaru dari para ahli di bidang robotika.</p></div>
+                        <div class="card p-6 rounded-lg text-center scroll-animation" style="transition-delay: 250ms;"><h3 class="text-xl font-bold mb-2">Workshops</h3><p class="text-text-secondary">Pelatihan praktis untuk membangun dan memprogram robot secara langsung.</p></div>
+                        <div class="card p-6 rounded-lg text-center scroll-animation" style="transition-delay: 300ms;"><h3 class="text-xl font-bold mb-2">Short Courses Programs</h3><p class="text-text-secondary">Program kursus singkat untuk mempelajari topik spesifik dalam robotika.</p></div>
+                        <div class="card p-6 rounded-lg text-center scroll-animation" style="transition-delay: 350ms;"><h3 class="text-xl font-bold mb-2">Acara / Events</h3><p class="text-text-secondary">Mengadakan berbagai acara menarik seputar dunia teknologi dan robot.</p></div>
+                        <div class="card p-6 rounded-lg text-center scroll-animation" style="transition-delay: 400ms;"><h3 class="text-xl font-bold mb-2">Summer / Holiday Classes</h3><p class="text-text-secondary">Mengisi waktu liburan dengan kegiatan robotika yang seru dan edukatif.</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="galeri" class="py-20 sm:py-28">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16 scroll-animation">
+                        <h2 class="text-3xl md:text-4xl font-bold">Galeri Robot</h2>
+                        <p class="text-text-secondary mt-2">Beberapa Robot Ikonik di Dunia Teknologi</p>
+                        <div class="w-24 h-1 bg-accent-blue mx-auto mt-4"></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="card flex flex-col rounded-lg overflow-hidden scroll-animation"><img src="https://i.imgur.com/eUKJ6Am.png" alt="Robot Honda P2" class="w-full h-56 object-contain p-2" onerror="this.onerror=null;this.src='https://placehold.co//FFFFFF/112A46?text=Honda+P2';"><div class="p-6 flex flex-col flex-grow"><h3 class="text-xl font-bold">Robot Honda P2</h3><p class="text-text-secondary mt-2 flex-grow">Salah satu robot humanoid pertama yang mampu berjalan secara dinamis.</p><a href="#" data-target="robot-p2" class="robot-detail-btn font-semibold text-accent-blue hover:underline mt-4">Lihat Detail →</a></div></div>
+                        <div class="card flex flex-col rounded-lg overflow-hidden scroll-animation" style="transition-delay: 100ms;"><img src="https://i.imgur.com/lvfjf47.png" alt="Robot Motoman EA1400N" class="w-full h-56 object-contain p-2" onerror="this.onerror=null;this.src='https://placehold.co//FFFFFF/112A46?text=Motoman';"><div class="p-6 flex flex-col flex-grow"><h3 class="text-xl font-bold">Motoman</h3><p class="text-text-secondary mt-2 flex-grow">Robot industri yang dikenal karena presisi dan kecepatan tinggi dalam manufaktur.</p><a href="#" data-target="robot-motoman" class="robot-detail-btn font-semibold text-accent-blue hover:underline mt-4">Lihat Detail →</a></div></div>
+                        <div class="card flex flex-col rounded-lg overflow-hidden scroll-animation" style="transition-delay: 200ms;"><img src="https://i.imgur.com/aod10bb.jpeg" alt="Robot RoBoHon" class="w-full h-56 object-contain p-2" onerror="this.onerror=null;this.src='https://placehold.co//FFFFFF/112A46?text=RoBoHon';"><div class="p-6 flex flex-col flex-grow"><h3 class="text-xl font-bold">RoBoHon</h3><p class="text-text-secondary mt-2 flex-grow">Robot smartphone unik yang bisa berjalan, berbicara, dan menari.</p><a href="#" data-target="robot-robohon" class="robot-detail-btn font-semibold text-accent-blue hover:underline mt-4">Lihat Detail →</a></div></div>
+                        <div class="card flex flex-col rounded-lg overflow-hidden scroll-animation" style="transition-delay: 300ms;"><img src="https://i.imgur.com/X3EvhKf.jpeg" alt="Robot Bioloid" class="w-full h-56 object-contain p-2" onerror="this.onerror=null;this.src='https://placehold.co//FFFFFF/112A46?text=Robot+Bioloid';"><div class="p-6 flex flex-col flex-grow"><h3 class="text-xl font-bold">Robot Bioloid</h3><p class="text-text-secondary mt-2 flex-grow">Kit robot DIY yang fleksibel untuk edukasi dan hobi, dapat dibangun menjadi berbagai bentuk.</p><a href="#" data-target="robot-bioloid" class="robot-detail-btn font-semibold text-accent-blue hover:underline mt-4">Lihat Detail →</a></div></div>
+                        <div class="card flex flex-col rounded-lg overflow-hidden scroll-animation" style="transition-delay: 400ms;"><img src="https://i.imgur.com/9TXk34t.jpeg" alt="Robot Hovis Eco" class="w-full h-56 object-contain p-2" onerror="this.onerror=null;this.src='https://placehold.co//FFFFFF/112A46?text=Robot+Hovis+Eco';"><div class="p-6 flex flex-col flex-grow"><h3 class="text-xl font-bold">Robot Hovis Eco</h3><p class="text-text-secondary mt-2 flex-grow">Robot humanoid edukasional yang dirancang untuk pembelajaran STEM yang interaktif.</p><a href="#" data-target="robot-hovis" class="robot-detail-btn font-semibold text-accent-blue hover:underline mt-4">Lihat Detail →</a></div></div>
+                        <div class="card flex flex-col rounded-lg overflow-hidden scroll-animation" style="transition-delay: 500ms;"><img src="https://i.imgur.com/7UNM4ir.jpeg" alt="Robonova II" class="w-full h-56 object-contain p-2" onerror="this.onerror=null;this.src='https://placehold.co//FFFFFF/112A46?text=Robonova+II';"><div class="p-6 flex flex-col flex-grow"><h3 class="text-xl font-bold">Robonova II</h3><p class="text-text-secondary mt-2 flex-grow">Robot humanoid yang canggih dengan 16 sendi motor, mampu melakukan gerakan kompleks.</p><a href="#" data-target="robot-robonova" class="robot-detail-btn font-semibold text-accent-blue hover:underline mt-4">Lihat Detail →</a></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="blog" class="py-20 sm:py-28 bg-bg-tertiary">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16 scroll-animation">
+                        <h2 class="text-3xl md:text-4xl font-bold">Blog & Artikel</h2>
+                        <p class="text-text-secondary mt-2">Wawasan Terbaru dari Dunia Teknologi dan Pemrograman</p>
+                        <div class="w-24 h-1 bg-accent-blue mx-auto mt-4"></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation"><h3 class="text-xl font-bold mb-2">Block Coding untuk Anak</h3><p class="text-text-secondary mb-4 flex-grow">Metode visual dan menyenangkan bagi anak-anak untuk mulai belajar konsep dasar pemrograman tanpa perlu mengetik kode yang rumit.</p><a href="#" data-target="artikel-1" class="read-more-btn font-semibold text-accent-blue hover:underline mt-auto">Baca Selengkapnya →</a></div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 100ms;"><h3 class="text-xl font-bold mb-2">AI vs Pemrograman Tradisional</h3><p class="text-text-secondary mb-4 flex-grow">Pahami perbedaan mendasar antara program yang mengikuti instruksi statis dan program AI yang belajar dari data untuk membuat keputusan.</p><a href="#" data-target="artikel-2" class="read-more-btn font-semibold text-accent-blue hover:underline mt-auto">Baca Selengkapnya →</a></div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 200ms;"><h3 class="text-xl font-bold mb-2">Manfaat Belajar Robotik</h3><p class="text-text-secondary mb-4 flex-grow">Belajar robotik sejak dini membantu anak mengembangkan keterampilan berpikir kritis, kreativitas, dan pemecahan masalah.</p><a href="#" data-target="artikel-3" class="read-more-btn font-semibold text-accent-blue hover:underline mt-auto">Baca Selengkapnya →</a></div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 300ms;"><h3 class="text-xl font-bold mb-2">Pentingnya Coding Sejak Dini</h3><p class="text-text-secondary mb-4 flex-grow">Di era digital, kemampuan coding menjadi literasi baru yang sama pentingnya dengan membaca untuk masa depan anak.</p><a href="#" data-target="artikel-4" class="read-more-btn font-semibold text-accent-blue hover:underline mt-auto">Baca Selengkapnya →</a></div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 400ms;"><h3 class="text-xl font-bold mb-2">Bahasa Program untuk Anak</h3><p class="text-text-secondary mb-4 flex-grow">Mulai dari Scratch yang visual hingga Python yang mudah dibaca, kenali bahasa pemrograman yang paling cocok untuk anak-anak.</p><a href="#" data-target="artikel-5" class="read-more-btn font-semibold text-accent-blue hover:underline mt-auto">Baca Selengkapnya →</a></div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 500ms;"><h3 class="text-xl font-bold mb-2">Memilih Kursus Robotik</h3><p class="text-text-secondary mb-4 flex-grow">Bagaimana cara memilih kursus robotik yang tepat? Artikel ini membahas tips penting untuk orang tua dalam mengambil keputusan.</p><a href="#" data-target="artikel-6" class="read-more-btn font-semibold text-accent-blue hover:underline mt-auto">Baca Selengkapnya →</a></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="event" class="py-20 sm:py-28">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16 scroll-animation">
+                        <h2 class="text-3xl md:text-4xl font-bold">Event & Kompetisi</h2>
+                        <p class="text-text-secondary mt-2">Ikuti Acara Seru dan Tunjukkan Bakatmu di Dunia Robotika</p>
+                        <div class="w-24 h-1 bg-accent-blue mx-auto mt-4"></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation">
+                            <h3 class="text-xl font-bold mb-2">RE Goes To Your School</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Kami membawa keseruan robotika langsung ke sekolah Anda melalui demo interaktif.</p>
+                            <a href="#" data-target="event-1" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 100ms;">
+                            <h3 class="text-xl font-bold mb-2">Robotic for Kids</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Program pengenalan robotika yang dirancang khusus untuk anak-anak usia dini.</p>
+                            <a href="#" data-target="event-2" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 200ms;">
+                            <h3 class="text-xl font-bold mb-2">Lasy Basic</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Mempelajari dasar-dasar mekanika dan konstruksi dengan kit Lasy yang kreatif.</p>
+                            <a href="#" data-target="event-3" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 300ms;">
+                            <h3 class="text-xl font-bold mb-2">Transporter Competition</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Lomba robot pemindah barang yang menguji kecepatan, presisi, dan strategi.</p>
+                            <a href="#" data-target="event-4" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 400ms;">
+                            <h3 class="text-xl font-bold mb-2">Sumo Robot</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Adu kekuatan dan kecerdasan robot dalam arena sumo untuk menjadi sang juara.</p>
+                            <a href="#" data-target="event-5" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 500ms;">
+                            <h3 class="text-xl font-bold mb-2">Lego Robotic</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Kompetisi membangun dan memprogram robot LEGO untuk menyelesaikan tantangan seru.</p>
+                            <a href="#" data-target="event-6" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 600ms;">
+                            <h3 class="text-xl font-bold mb-2">Drone Workshop</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Belajar merakit, menerbangkan, dan memahami teknologi di balik drone.</p>
+                            <a href="#" data-target="event-7" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 700ms;">
+                            <h3 class="text-xl font-bold mb-2">Coding & Robotic for Teacher</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Pelatihan khusus bagi para guru untuk mengintegrasikan coding dan robotika di kelas.</p>
+                            <a href="#" data-target="event-8" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                        <div class="card flex flex-col p-6 rounded-lg scroll-animation" style="transition-delay: 800ms;">
+                            <h3 class="text-xl font-bold mb-2">3D Design Workshop</h3>
+                            <p class="text-text-secondary mb-4 flex-grow">Pelajari dasar-dasar desain 3D dan cetak kreasimu menjadi nyata dengan 3D printing.</p>
+                            <a href="#" data-target="event-9" class="event-detail-btn font-semibold text-accent-blue hover:underline mt-auto">Lihat Detail →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="kontak" class="py-20 sm:py-28 bg-bg-tertiary">
+                <div class="container mx-auto px-6">
+                     <div class="text-center mb-16 scroll-animation">
+                        <h2 class="text-3xl md:text-4xl font-bold">Hubungi Kami</h2>
+                        <p class="text-text-secondary mt-2">Kami siap membantu mewujudkan potensi teknologi Anda.</p>
+                        <div class="w-24 h-1 bg-accent-blue mx-auto mt-4"></div>
+                    </div>
+                    <div class="card rounded-lg p-8 md:p-12 lg:p-16 scroll-animation">
+                        <div class="grid lg:grid-cols-2 gap-12">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-6">Informasi Kontak</h3>
+                                <div class="space-y-6 text-text-secondary">
+                                    <div class="flex items-start space-x-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-blue mt-1 flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>Blok AL no 1, Greenville, Jakarta Barat</span></div>
+                                    <div class="flex items-center space-x-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-blue flex-shrink-0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><span>staff-2@robotic-explorer.com</span></div>
+                                     <div class="flex items-center space-x-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-blue flex-shrink-0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><span>(Telp/WA) 0822-8922-8922</span></div>
+                                </div>
+                                <h3 class="text-2xl font-bold mt-10 mb-6">Jam Operasional</h3>
+                                 <div class="space-y-2 text-text-secondary"><p>Senin - Sabtu: 09:00 - 17:00</p><p>Minggu: Tutup</p></div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold mb-6">Kirim Pesan</h3>
+                                 <form id="contact-form" class="space-y-6">
+                                    <div><label for="name" class="block text-sm font-medium text-text-secondary mb-1">Nama (wajib)</label><input type="text" name="name" id="name" required class="block w-full rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-accent-blue focus:border-accent-blue" placeholder="Nama Anda"></div>
+                                    <div><label for="email" class="block text-sm font-medium text-text-secondary mb-1">Email (wajib)</label><input type="email" name="email" id="email" required class="block w-full rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-accent-blue focus:border-accent-blue" placeholder="email@anda.com"></div>
+                                    <div><label for="message" class="block text-sm font-medium text-text-secondary mb-1">Pesan</label><textarea id="message" name="message" rows="4" class="block w-full rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-accent-blue focus:border-accent-blue" placeholder="Tulis pesan Anda di sini..."></textarea></div>
+                                    <div><button type="submit" id="submit-button" class="w-full btn-primary">Kirim Pesan</button></div>
+                                     <p id="form-message" class="text-center text-sm"></p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-bg-secondary border-t border-border-color">
+            <div class="container mx-auto px-6 py-8 text-center text-text-secondary">
+                <p>&copy; 2025 Robotic Explorer. Didesain ulang dengan tema Blueprint.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div id="article-viewer" class="hidden min-h-screen bg-bg-primary py-20 sm:py-28">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <button class="back-to-main-btn btn-secondary mb-8">← Kembali ke Beranda</button>
+        </div>
+    </div>
+
+    <div id="robot-viewer" class="hidden min-h-screen bg-bg-primary py-20 sm:py-28">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <button class="back-to-main-btn btn-secondary mb-8">← Kembali ke Galeri</button>
+        </div>
+    </div>
+    
+    <div id="event-viewer" class="hidden min-h-screen bg-bg-primary py-20 sm:py-28">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <button class="back-to-main-btn btn-secondary mb-8">← Kembali ke Event</button>
+        </div>
+    </div>
+
+    <a href="https://wa.me/6287878340447" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+            <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+        </svg>
+    </a>
+
+    <script>
+        // Data Artikel, Robot, dan Event
+        const articles = {
+            'artikel-1': { title: 'Block Coding untuk Anak: Cara Menyenangkan Belajar Pemrograman', content: `<div class="page-prose"><p>Di era digital ini, belajar pemrograman menjadi semakin penting, bahkan untuk anak-anak. Namun, bagaimana cara mengenalkan konsep yang kompleks seperti coding dengan cara yang menyenangkan? Jawabannya adalah <strong>block coding</strong>.</p><p>Block coding adalah pendekatan visual untuk pemrograman di mana anak-anak menggunakan blok grafis—mirip dengan balok Lego—yang masing-masing mewakili perintah atau fungsi. Mereka dapat menyusun blok-blok ini untuk membuat program, game, atau animasi sederhana. Metode ini menghilangkan kebutuhan untuk menghafal sintaksis yang rumit, sehingga anak-anak bisa fokus pada logika dan kreativitas.</p><h3 class="text-2xl font-bold mt-6 mb-3">Mengapa Block Coding Efektif?</h3><ul><li><strong>Intuitif dan Visual:</strong> Anak-anak secara alami belajar melalui permainan visual. Block coding memanfaatkan ini dengan menyediakan antarmuka yang penuh warna dan interaktif.</li><li><strong>Mengurangi Frustrasi:</strong> Kesalahan sintaksis adalah salah satu hambatan terbesar bagi pemula. Dengan block coding, kesalahan seperti ini hampir tidak mungkin terjadi, sehingga anak-anak tidak mudah putus asa.</li><li><strong>Membangun Fondasi Logika:</strong> Meskipun sederhana, block coding mengajarkan konsep-konsep inti pemrograman seperti urutan, perulangan (loops), dan kondisional (if/then statements) yang menjadi dasar dari semua bahasa pemrograman.</li></ul><p>Platform populer seperti Scratch dari MIT adalah contoh bagus dari penerapan block coding. Dengan jutaan proyek yang dibagikan secara online, anak-anak tidak hanya belajar tetapi juga menjadi bagian dari komunitas kreatif global.</p></div>`},
+            'artikel-2': { title: 'AI Programming vs. Pemrograman Tradisional', content: `<div class="page-prose"><p>Pemrograman telah berkembang pesat, dan munculnya Kecerdasan Buatan (AI) telah menciptakan paradigma baru: <strong>AI programming</strong>. Ini berbeda secara fundamental dari pemrograman tradisional yang selama ini kita kenal.</p><h3 class="text-2xl font-bold mt-6 mb-3">Pemrograman Tradisional: Aturan Eksplisit</h3><p>Dalam pemrograman tradisional, seorang programmer menulis aturan atau instruksi yang sangat spesifik untuk memberi tahu komputer apa yang harus dilakukan. Program akan mengikuti instruksi ini langkah demi langkah untuk menghasilkan output yang diharapkan. Logikanya bersifat deterministik: input yang sama akan selalu menghasilkan output yang sama.</p<h3 class="text-2xl font-bold mt-6 mb-3">AI Programming: Belajar dari Data</h3><p>Sebaliknya, AI programming tidak selalu mengandalkan aturan yang ditulis secara eksplisit. Sebaliknya, programmer membangun model atau algoritma yang dapat "belajar" dari data. Misalnya, untuk mengenali gambar kucing, programmer tidak menulis aturan "jika memiliki kumis dan telinga runcing, maka itu kucing". Sebaliknya, mereka "melatih" model AI dengan ribuan gambar kucing, dan model tersebut akan belajar sendiri pola-ola yang mendefinisikan seekor kucing.</p><p>Perbedaan utamanya terletak pada pendekatan: pemrograman tradisional adalah tentang <strong>memberi tahu</strong> komputer cara menyelesaikan masalah, sementara AI programming adalah tentang <strong>mengajari</strong> komputer cara belajar menyelesaikan masalah. Memahami perbedaan ini sangat penting untuk memilih pendekatan yang tepat untuk tantangan teknologi modern.</p></div>`},
+            'artikel-3': { title: 'Manfaat Belajar Robotik untuk Anak di Usia Dini', content: `<div class="page-prose"><p>Mengenalkan robotik pada anak-anak sejak usia dini bukanlah sekadar mengikuti tren, tetapi sebuah investasi untuk masa depan mereka. Belajar robotik menawarkan serangkaian manfaat yang melampaui sekadar merakit mainan canggih.</p><ul><li><strong>Keterampilan Pemecahan Masalah (Problem-Solving):</strong> Anak-anak dihadapkan pada tantangan—misalnya, "bagaimana cara membuat robot ini bergerak?"—dan mereka harus berpikir logis dan sistematis untuk menemukan solusinya.</li><li><strong>Kreativitas dan Inovasi:</strong> Dari merancang bentuk robot hingga memprogram perilakunya, anak-anak bebas bereksperimen dengan ide-ide mereka sendiri. Proses ini mengubah mereka dari konsumen teknologi pasif menjadi pencipta aktif.</li><li><strong>Jembatan ke Dunia STEM:</strong> Konsep-konsep abstrak seperti fisika, matematika, dan logika pemrograman menjadi nyata dan dapat dipahami melalui proyek robotik yang praktis dan menyenangkan.</li></ul><p>Pada akhirnya, keterampilan yang mereka asah—seperti kerja sama tim, ketekunan, dan berpikir kritis—adalah keterampilan esensial yang akan mereka butuhkan untuk sukses di bidang apa pun di masa depan.</p></div>`},
+            'artikel-4': { title: 'Pentingnya Belajar Coding untuk Anak di Era Digital', content: `<div class="page-prose"><p>Di era yang serba digital saat ini, kemampuan coding telah menjadi literasi baru yang sama pentingnya dengan membaca, menulis, dan berhitung. Belajar coding bukan lagi hanya untuk mereka yang ingin menjadi insinyur perangkat lunak; ini adalah keterampilan fundamental yang membekali anak-anak untuk memahami dan membentuk dunia di sekitar mereka.</p><p>Belajar coding mengajarkan <strong>berpikir komputasional</strong>—kemampuan untuk memecah masalah yang kompleks menjadi bagian-bagian yang lebih kecil dan dapat dikelola. Keterampilan ini tidak hanya berlaku dalam pemrograman, tetapi juga dalam memecahkan masalah di kehidupan sehari-hari, dari mengerjakan tugas sekolah hingga merencanakan sebuah proyek.</p><p>Selain itu, coding mendorong <strong>ketekunan dan kesabaran</strong>. Saat program tidak berjalan seperti yang diharapkan, anak-anak belajar untuk men-debug, mencari kesalahan, dan mencoba lagi. Proses trial-and-error ini membangun ketahanan dan pola pikir yang berorientasi pada pertumbuhan (growth mindset). Dengan memberikan anak-anak kesempatan untuk belajar coding, kita memberi mereka alat untuk tidak hanya menggunakan teknologi, tetapi juga untuk menciptakannya.</p></div>`},
+            'artikel-5': { title: 'Bahasa Pemrograman yang Cocok untuk Anak-Anak', content: `<div class="page-prose"><p>Memilih bahasa pemrograman pertama untuk anak bisa menjadi tantangan bagi orang tua. Kuncinya adalah memilih bahasa yang visual, intuitif, dan memberikan hasil yang cepat untuk menjaga motivasi mereka. Berikut adalah beberapa pilihan yang sangat baik untuk pemula.</p><ul><li><strong>Scratch:</strong> Dikembangkan oleh MIT, Scratch adalah pilihan paling populer untuk anak-anak. Ini menggunakan antarmuka block coding, di mana anak-anak menyusun blok kode seperti puzzle untuk membuat animasi dan game. Sangat bagus untuk memperkenalkan logika pemrograman tanpa beban sintaksis.</li><li><strong>Python:</strong> Setelah anak-anak nyaman dengan konsep block coding, Python adalah langkah selanjutnya yang sangat baik. Sintaksisnya bersih, mudah dibaca, dan mirip dengan bahasa Inggris biasa. Python adalah bahasa yang sangat kuat dan serbaguna.</li><li><strong>JavaScript:</strong> Sebagai bahasa yang menggerakkan web, JavaScript memungkinkan anak-anak untuk melihat hasil kerja mereka secara langsung di browser. Dengan JavaScript, mereka dapat membuat situs web interaktif dan game sederhana.</li></ul></div>`},
+            'artikel-6': { title: 'Cara Memilih Kursus Robotik yang Tepat untuk Anak', content: `<div class="page-prose"><p>Melihat antusiasme anak Anda terhadap robotik adalah hal yang luar biasa, dan mendaftarkannya ke kursus yang tepat dapat menyalurkan minat tersebut menjadi keterampilan yang berharga. Namun, dengan begitu banyak pilihan, bagaimana cara memilih yang terbaik?</p><ul><li><strong>Kurikulum Sesuai Usia:</strong> Pastikan kursus memiliki kurikulum yang dirancang untuk kelompok usia anak Anda. Untuk anak yang lebih muda, fokus harus pada permainan dan eksplorasi. Untuk yang lebih tua, kurikulum harus lebih menantang.</li><li><strong>Pendekatan Praktis (Hands-On):</strong> Robotik paling baik dipelajari dengan melakukan. Cari kursus yang menekankan pembelajaran berbasis proyek di mana setiap anak dapat membangun dan memprogram robot mereka sendiri.</li><li><strong>Instruktur Berpengalaman:</strong> Instruktur yang baik tidak hanya mengerti materi, tetapi juga tahu cara membuatnya menarik dan dapat diakses oleh anak-anak.</li><li><strong>Ukuran Kelas Kecil:</strong> Kelas yang lebih kecil memungkinkan perhatian yang lebih personal dari instruktur, memastikan anak Anda tidak akan tertinggal.</li></ul></div>`}
+        };
+
+        const robots = {
+            'robot-p2': { title: 'Robot Honda P2', image: 'https://i.imgur.com/eUKJ6Am.png', content: `<div class="page-prose"><p><strong>Honda P2</strong> adalah tonggak sejarah dalam pengembangan robot humanoid. Diperkenalkan pada tahun 1996, P2 (Prototype 2) adalah salah satu robot humanoid pertama di dunia yang sepenuhnya mandiri (tidak terhubung kabel) dan mampu berjalan secara dinamis di dua kaki, meniru gerakan manusia dengan cukup baik.</p><p>Robot ini memiliki tinggi 182 cm dan berat 210 kg, menjadikannya cukup besar dan kokoh. Kemampuannya untuk berjalan, menaiki tangga, dan mendorong kereta menunjukkan kemajuan signifikan dalam bidang kontrol gerak dan keseimbangan pada masanya. P2 menjadi fondasi bagi pengembangan robot Honda yang lebih terkenal, yaitu ASIMO.</p><h3 class="text-2xl font-bold mt-6 mb-3">Fitur Utama:</h3><ul><li>Berjalan bipedal secara mandiri.</li><li>Mampu menaiki dan menuruni tangga.</li><li>Sistem kontrol nirkabel.</li><li>Menjadi cikal bakal robot ASIMO.</li></ul></div>`},
+            'robot-motoman': { title: 'Robot Motoman', image: 'https://i.imgur.com/lvfjf47.png', content: `<div class="page-prose"><p><strong>Motoman</strong> adalah merek robot industri yang diproduksi oleh Yaskawa Electric Corporation. Robot-robot ini terkenal di seluruh dunia manufaktur karena presisi, kecepatan, dan keandalannya yang luar biasa. Digunakan dalam berbagai aplikasi, Motoman secara signifikan meningkatkan efisiensi dan kualitas produksi.</p><p>Lengan robotik Motoman dapat melakukan tugas-tugas yang berulang dengan tingkat akurasi yang tidak mungkin dicapai oleh manusia, seperti pengelasan, pengecatan, perakitan, dan penanganan material. Mereka adalah tulang punggung dari banyak pabrik modern, dari otomotif hingga elektronik, memastikan proses produksi berjalan lancar dan cepat.</p<h3 class="text-2xl font-bold mt-6 mb-3">Aplikasi Umum:</h3><ul><li>Pengelasan (Arc Welding & Spot Welding).</li><li>Perakitan komponen presisi.</li><li>Pengecatan dan pelapisan.</li><li>Pengemasan dan paletisasi.</li></ul></div>`},
+            'robot-robohon': { title: 'RoBoHon', image: 'https://i.imgur.com/aod10bb.jpeg', content: `<div class="page-prose"><p><strong>RoBoHon</strong>, yang dikembangkan oleh Sharp Corporation, adalah perangkat hybrid yang unik, menggabungkan fungsionalitas smartphone dengan pesona robot pendamping. Robot mungil ini tidak hanya dapat melakukan panggilan telepon dan mengirim email, tetapi juga dapat berjalan, berbicara, menari, dan bahkan memproyeksikan gambar.</p><p>Dirancang untuk menjadi asisten pribadi yang interaktif, RoBoHon merespons perintah suara dan dapat mengenali wajah pemiliknya. Interaksi dengannya terasa lebih personal dibandingkan dengan smartphone biasa. Kemampuannya untuk bergerak dan berekspresi secara fisik menciptakan ikatan emosional yang kuat dengan penggunanya, menjadikannya contoh menarik dari masa depan interaksi manusia-robot.</p<h3 class="text-2xl font-bold mt-6 mb-3">Kemampuan Unik:</h3><ul><li>Fungsi smartphone terintegrasi.</li><li>Mampu berjalan, menari, dan berekspresi.</li><li>Proyektor internal untuk menampilkan foto dan video.</li><li>Asisten pribadi yang diaktifkan dengan suara.</li></ul></div>`},
+            'robot-bioloid': { title: 'Robot Bioloid', image: 'https://i.imgur.com/X3EvhKf.jpeg', content: `<div class="page-prose"><p><strong>Bioloid</strong> dari Robotis adalah sebuah kit robotika DIY (Do-It-Yourself) yang sangat populer di kalangan penghobi dan institusi pendidikan. Kit ini bersifat modular, artinya pengguna dapat merakit berbagai jenis robot, mulai dari humanoid, laba-laba, hingga lengan robotik, hanya dari satu set komponen.</p><p>Kunci dari fleksibilitas Bioloid adalah servo motor cerdasnya yang disebut Dynamixel. Setiap motor dapat dikontrol secara presisi dan memberikan umpan balik, memungkinkan pembuatan robot dengan gerakan yang kompleks dan terkoordinasi. Bioloid adalah platform yang sangat baik untuk belajar tentang dasar-dasar mekanika, elektronika, dan pemrograman robot.</p<h3 class="text-2xl font-bold mt-6 mb-3">Keunggulan:</h3><ul><li>Sistem modular yang sangat fleksibel.</li><li>Menggunakan servo motor cerdas Dynamixel.</li><li>Platform edukasi yang kuat untuk belajar STEM.</li><li>Dapat dikonfigurasi menjadi berbagai bentuk robot.</li></ul></div>`},
+            'robot-hovis': { title: 'Robot Hovis Eco', image: 'https://i.imgur.com/9TXk34t.jpeg', content: `<div class="page-prose"><p><strong>Hovis Eco</strong> adalah robot humanoid edukasional yang dirancang untuk menjadi alat pembelajaran STEM (Science, Technology, Engineering, Mathematics) yang menarik dan interaktif bagi siswa. Dengan Hovis, siswa tidak hanya belajar teori, tetapi juga dapat langsung mempraktikkannya dengan merakit dan memprogram robot mereka sendiri.</p><p>Robot ini menawarkan berbagai tingkat kesulitan, mulai dari perakitan dasar hingga pemrograman lanjutan, sehingga cocok untuk berbagai jenjang usia. Melalui Hovis, siswa dapat belajar tentang konsep-konsep seperti kinematika, sensor, dan logika pemrograman dengan cara yang menyenangkan dan tidak membosankan. Ini membantu menumbuhkan minat mereka pada bidang teknologi sejak dini.</p<h3 class="text-2xl font-bold mt-6 mb-3">Manfaat Edukasi:</h3><ul><li>Pembelajaran STEM yang praktis dan interaktif.</li><li>Mengembangkan keterampilan pemecahan masalah.</li><li>Mengenalkan konsep dasar rekayasa dan pemrograman.</li><li>Meningkatkan kreativitas dan kerja tim.</li></ul></div>`},
+            'robot-robonova': { title: 'Robonova II', image: 'https://i.imgur.com/7UNM4ir.jpeg', content: `<div class="page-prose"><p><strong>Robonova II</strong> adalah robot humanoid canggih yang ditujukan untuk penghobi robotika yang serius dan kompetisi. Dilengkapi dengan 16 sendi motor servo yang kuat, robot ini mampu melakukan berbagai gerakan yang sangat kompleks dan akrobatik, seperti berjalan, berlari, jungkir balik, dan bahkan menari.</p><p>Struktur rangkanya yang terbuat dari logam memberikan daya tahan, sementara perangkat lunak pengontrolnya memungkinkan pengguna untuk memprogram urutan gerakan yang rumit dengan mudah. Robonova sering digunakan dalam kompetisi RoboCup, di mana robot-robot humanoid bertanding dalam berbagai tantangan, menunjukkan kemampuannya dalam hal kelincahan, keseimbangan, dan kontrol gerak.</p<h3 class="text-2xl font-bold mt-6 mb-3">Fitur Lanjutan:</h3><ul><li>16 derajat kebebasan (sendi motor).</li><li>Mampu melakukan gerakan akrobatik yang kompleks.</li><li>Rangka logam yang kokoh dan tahan lama.</li><li>Populer di kalangan penghobi dan kompetisi robot.</li></ul></div>`}
+        };
+        
+        const events = {
+            'event-1': { title: 'Robotic Explorer Goes To Your School', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/RE-Goes-To-School-scaled.jpg', content: `<div class="page-prose"><p>Ingin membawa pengalaman belajar robotika yang tak terlupakan langsung ke sekolah Anda? Program <strong>RE Goes To Your School</strong> adalah jawabannya. Tim ahli kami akan datang dengan peralatan lengkap untuk mengadakan sesi demo interaktif, workshop singkat, atau bahkan kompetisi mini yang akan membangkitkan minat siswa terhadap dunia STEM.</p><p>Program ini dapat disesuaikan sepenuhnya dengan kebutuhan dan kurikulum sekolah Anda, cocok untuk acara sekolah, pekan sains, atau sebagai pengenalan program ekstrakurikuler baru.</p></div>`},
+            'event-2': { title: 'Robotic for Kids', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/Robotic-For-Kids-scaled.jpg', content: `<div class="page-prose"><p>Program <strong>Robotic for Kids</strong> dirancang khusus untuk memperkenalkan dunia robotika kepada anak-anak usia dini (4-7 tahun) dengan cara yang paling menyenangkan. Menggunakan kit robotik yang aman dan berwarna-warni, anak-anak akan belajar konsep dasar logika, urutan, dan pemecahan masalah melalui permainan dan cerita.</p><p>Setiap sesi adalah petualangan baru di mana anak-anak dapat membangun robot sederhana dan melihat hasil karya mereka bergerak dan berinteraksi. Ini adalah langkah pertama yang sempurna untuk menumbuhkan kreativitas dan kecintaan pada teknologi.</p></div>`},
+            'event-3': { title: 'Lasy Basic Workshop', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/Lasy-Basic-scaled.jpg', content: `<div class="page-prose"><p>Workshop <strong>Lasy Basic</strong> berfokus pada pengembangan kreativitas dan pemahaman mekanika dasar. Menggunakan sistem konstruksi Lasy dari Jerman yang unik dan fleksibel, peserta akan belajar bagaimana komponen-komponen sederhana dapat digabungkan untuk membuat struktur dan mekanisme yang kompleks, mulai dari kendaraan hingga hewan.</p><p>Workshop ini sangat baik untuk melatih keterampilan motorik halus, imajinasi spasial, dan pemikiran rekayasa sejak dini tanpa melibatkan komponen elektronik yang rumit.</p></div>`},
+            'event-4': { title: 'Transporter Competition', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/Transporter-scaled.jpg', content: `<div class="page-prose"><p>Uji kemampuan robot Anda dalam kompetisi <strong>Transporter</strong> yang menantang! Dalam lomba ini, robot otonom harus menavigasi lintasan, mengambil objek dari satu titik, dan memindahkannya ke tujuan dengan secepat dan seakurat mungkin. Tantangan ini menguji berbagai aspek, mulai dari desain mekanik gripper, sensorik untuk mengikuti garis, hingga algoritma pemrograman yang efisien.</p><p>Kompetisi ini terbuka untuk berbagai level, dari pemula hingga mahir, dengan tingkat kesulitan lintasan yang disesuaikan.</p></div>`},
+            'event-5': { title: 'Sumo Robot Competition', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/Sumo-Robot-scaled.jpg', content: `<div class="page-prose"><p>Saksikan pertarungan epik di mana hanya yang terkuat dan tercerdas yang akan bertahan! Dalam <strong>Kompetisi Sumo Robot</strong>, dua robot saling berhadapan di dalam arena (dohyo) dengan satu tujuan: mendorong lawan keluar. Ini adalah adu strategi, kekuatan, dan kecepatan. Peserta harus merancang robot yang kokoh dan memprogramnya dengan sensor cerdas untuk mendeteksi lawan dan bertahan di arena.</p><p>Acara ini selalu menjadi favorit penonton karena intensitas dan ketegangannya. Siapkan robotmu dan jadilah Yokozuna!</p></div>`},
+            'event-6': { title: 'Lego Robotic Competition', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/Lego-Robotic-scaled.jpg', content: `<div class="page-prose"><p>Kompetisi <strong>Lego Robotic</strong> adalah ajang di mana kreativitas dan pemrograman bertemu. Menggunakan platform LEGO Mindstorms atau SPIKE Prime, tim peserta akan merancang, membangun, dan memprogram robot untuk menyelesaikan serangkaian misi dalam sebuah arena bertema. Setiap tahun, tema dan misi selalu baru, menantang peserta untuk berpikir kreatif dan bekerja sama dalam tim untuk mencari solusi terbaik. Kompetisi ini menguji kemampuan teknis, strategi, dan manajemen proyek.</p></div>`},
+            'event-7': { title: 'Drone Workshop', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/Drone-scaled.jpg', content: `<div class="page-prose"><p>Terbang lebih tinggi dengan <strong>Workshop Drone</strong> kami! Acara ini memberikan pengenalan komprehensif tentang dunia teknologi drone. Peserta akan belajar tentang komponen utama drone, prinsip aerodinamika, cara merakit drone sederhana, serta dasar-dasar menerbangkan drone dengan aman dan bertanggung jawab. Sesi ini juga akan menyentuh topik pemrograman drone untuk misi otonom sederhana. Sangat cocok untuk pemula yang penasaran dengan teknologi pesawat tanpa awak.</p></div>`},
+            'event-8': { title: 'Coding & Robotic for Teacher', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/Coding-For-Teacher-scaled.jpg', content: `<div class="page-prose"><p>Program pelatihan <strong>Coding & Robotic for Teacher</strong> dirancang khusus untuk membekali para pendidik dengan pengetahuan dan keterampilan yang diperlukan untuk mengajarkan coding dan robotika di kelas. Kami memahami tantangan yang dihadapi guru, oleh karena itu pelatihan ini berfokus pada pendekatan praktis, menyediakan ide-ide proyek yang menarik, dan cara mengintegrasikan materi STEM ke dalam kurikulum yang ada. Jadilah guru masa depan yang siap mencetak inovator-inovator muda!</p></div>`},
+            'event-9': { title: '3D Design Workshop', image: 'https://worldofroboticexplorer.com/wp-content/uploads/2024/07/3D-Design-scaled.jpg', content: `<div class="page-prose"><p>Dari imajinasi menjadi objek nyata! Dalam <strong>Workshop Desain 3D</strong>, peserta akan belajar menggunakan perangkat lunak desain 3D yang intuitif untuk membuat model digital dari ide-ide mereka sendiri. Materi mencakup dasar-dasar pemodelan 3D, teknik desain, dan persiapan file untuk pencetakan 3D (3D printing). Di akhir workshop, peserta akan melihat salah satu desain mereka dicetak menjadi objek fisik yang bisa dibawa pulang. Ini adalah pengenalan yang fantastis ke dunia manufaktur digital.</p></div>`}
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainContent = document.getElementById('main-content');
+            const articleViewer = document.getElementById('article-viewer');
+            const robotViewer = document.getElementById('robot-viewer');
+            const eventViewer = document.getElementById('event-viewer');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            let lastScrollPosition = 0;
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animation').forEach((el) => observer.observe(el));
+
+            function showDetailPage(viewerElement, contentData, contentId) {
+                lastScrollPosition = window.scrollY;
+                const data = contentData[contentId];
+                if (data) {
+                    const contentContainer = viewerElement.querySelector('.container');
+                    
+                    const oldContent = contentContainer.querySelector('.content-wrapper');
+                    if (oldContent) oldContent.remove();
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'content-wrapper';
+                    
+                    let imageHTML = data.image ? `<img src="${data.image}" alt="${data.title}" class="w-full h-auto max-h-80 object-cover rounded-lg mb-8 border border-border-color bg-bg-secondary p-2">` : '';
+
+                    wrapper.innerHTML = `
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">${data.title}</h2>
+                        ${imageHTML}
+                        ${data.content}
+                    `;
+                    contentContainer.appendChild(wrapper);
+
+                    mainContent.classList.add('hidden');
+                    viewerElement.classList.remove('hidden');
+                    window.scrollTo(0, 0);
+                }
+            }
+            
+            document.querySelectorAll('.read-more-btn').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showDetailPage(articleViewer, articles, link.dataset.target);
+                });
+            });
+            
+            document.querySelectorAll('.robot-detail-btn').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showDetailPage(robotViewer, robots, link.dataset.target);
+                });
+            });
+            
+            document.querySelectorAll('.event-detail-btn').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showDetailPage(eventViewer, events, link.dataset.target);
+                });
+            });
+
+            document.querySelectorAll('.back-to-main-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    articleViewer.classList.add('hidden');
+                    robotViewer.classList.add('hidden');
+                    eventViewer.classList.add('hidden');
+                    mainContent.classList.remove('hidden');
+                    window.scrollTo(0, lastScrollPosition);
+                });
+            });
+
+            const contactForm = document.getElementById('contact-form');
+            const submitButton = document.getElementById('submit-button');
+            const formMessage = document.getElementById('form-message');
+            // GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxDRZNa6ua3cEZqH1Tc_4OtIoqXwnATwRnwpEY1xM3GsaY1jGv8psn07-A2oXdZqGlRlQ/exec'; 
+
+            contactForm.addEventListener('submit', e => {
+                e.preventDefault();
+                submitButton.disabled = true;
+                submitButton.textContent = 'Mengirim...';
+
+                fetch(scriptURL, { method: 'POST', body: new FormData(contactForm)})
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.result === 'success'){
+                            formMessage.textContent = 'Pesan Anda berhasil terkirim. Terima kasih!';
+                            formMessage.style.color = 'var(--accent-blue)';
+                            contactForm.reset();
+                        } else {
+                            throw new Error('Server response was not successful.');
+                        }
+                    })
+                    .catch(error => {
+                        formMessage.textContent = 'Maaf, terjadi kesalahan. Silakan coba lagi.';
+                        formMessage.style.color = '#E53935'; // Fallback red
+                        console.error('Error!', error.message);
+                    })
+                    .finally(() => {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Kirim Pesan';
+                         setTimeout(() => { formMessage.textContent = '' }, 5000);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
